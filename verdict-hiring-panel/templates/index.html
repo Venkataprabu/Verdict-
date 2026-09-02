@@ -1,0 +1,223 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Verdict | Evidence Hiring Panel</title>
+  <style>
+    /* ── Light mode palette ── */
+    :root{--bg:#f7f8fc;--card:#ffffff;--ink:#18213f;--muted:#60708d;--line:#e2e5f0;--purple:#6d4ee6;--blue:#3376ed;--aqua:#25b9be;--soft:#eef2ff;--rose:#d85f95;--danger:#c0283a;--shadow:0 2px 12px #1a237e0e,0 6px 28px #1a237e08;--hire:#0e7f4f;--hire-bg:#e6f7ef;--interview:#a05a00;--interview-bg:#fff4e0;--reject:#b8264c;--reject-bg:#fde8ee}
+    /* ── Dark mode palette (unchanged) ── */
+    body.dark{--bg:#0d1021;--card:#171a31;--ink:#f3f2ff;--muted:#b3b6cd;--line:#303453;--soft:#222044;--danger:#ff6b81;--shadow:0 18px 50px #0006;--hire:#34d399;--hire-bg:#0a2e1e;--interview:#fbbf24;--interview-bg:#2a1f00;--reject:#fb7185;--reject-bg:#2a0a14}
+    *{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:14px/1.5 Inter,ui-sans-serif,system-ui,sans-serif;transition:.2s}
+    .wrap{max-width:1180px;margin:auto;padding:23px 20px 60px}header{display:flex;align-items:center;gap:20px;margin-bottom:25px}
+    .brand{font-size:20px;font-weight:900;letter-spacing:-.5px}.mark{display:inline-grid;place-items:center;width:32px;height:32px;margin-right:8px;border-radius:10px;background:linear-gradient(140deg,var(--purple),var(--blue));color:#fff;box-shadow:0 7px 17px #5746bd52}
+    .header-line{height:1px;flex:1;background:linear-gradient(90deg,var(--line),transparent)}.tag{font-size:11px;letter-spacing:.12em;color:var(--muted);font-weight:800;text-transform:uppercase}
+    .theme{border:1px solid var(--line);border-radius:99px;background:var(--card);color:var(--ink);padding:7px 11px;cursor:pointer;font-weight:800}
+    .hero{position:relative;overflow:hidden;border-radius:20px;padding:35px;background:linear-gradient(125deg,#161b49,#303493 56%,#5b3ab2);color:#fff;box-shadow:var(--shadow)}.hero:after{content:'⚖';position:absolute;right:5%;bottom:-40px;font-size:180px;opacity:.08}
+    .hero h1{font-size:34px;letter-spacing:-1.2px;margin:5px 0}.hero p{color:#d6dafa;max-width:700px;margin:0}.upload{position:relative;z-index:1;margin-top:23px;padding:14px;border:1px solid #ffffff45;border-radius:14px;background:#ffffff16;backdrop-filter:blur(10px);display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px}
+    .field,.drop{border:1px solid #ffffff40;border-radius:10px;padding:10px 12px;background:#11194330}.field label,.drop>label{display:block;font-size:10px;letter-spacing:.09em;text-transform:uppercase;font-weight:900;color:#cbd5ff;cursor:pointer}
+    .field input,.field textarea{display:block;width:100%;padding:2px 0;border:0;outline:0;background:transparent;color:#fff;font:inherit}.field input::placeholder,.field textarea::placeholder{color:#ccd0ea}.field textarea{resize:none;height:24px}
+    /* Focus: cyan inside hero form (dark background), purple elsewhere in light mode */
+    .field input:focus-visible,.field textarea:focus-visible,.drop:focus-within{outline:2px solid #94ebff;outline-offset:2px}
+    .drop{position:relative;transition:.2s;color:#d7ddfd;min-height:72px}.drop:hover{background:#ffffff2b;border-color:#fff;transform:translateY(-1px)}.drop b{display:block;color:#fff}.drop small{display:block;color:#d7ddfd;margin-top:3px}.drop .cloud{float:right;font-size:21px;color:#94ebff}
+    .visually-hidden{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+    .skip-link{position:absolute;left:8px;top:-48px;background:#fff;color:#3631a2;padding:10px 14px;border-radius:8px;font-weight:900;z-index:10;transition:top .15s}.skip-link:focus{top:8px}
+    .action{grid-column:1/-1;border:0;border-radius:10px;background:#fff;color:#3631a2;padding:12px 16px;font-weight:900;cursor:pointer}.action:disabled{opacity:.6}
+    .pipeline{position:relative;display:grid;grid-template-columns:repeat(5,1fr);gap:0;margin:28px 0 21px}.pipeline:before{content:'';position:absolute;top:19px;left:10%;right:10%;height:2px;background:var(--line);z-index:-1}.step{text-align:center;color:var(--muted);font-size:11px;font-weight:800}.icon{display:grid;place-items:center;width:40px;height:40px;margin:0 auto 7px;border:1px solid var(--line);border-radius:13px;background:var(--card);font-size:17px;transition:.25s}.step.active,.step.done{color:var(--purple)}.step.active .icon{border-color:var(--purple);background:var(--soft);box-shadow:0 0 0 5px #7456df17}.step.done .icon{background:linear-gradient(135deg,var(--purple),var(--blue));color:#fff;border-color:transparent}
+    .empty{padding:44px 25px;text-align:center;background:var(--card);border:1px solid var(--line);border-radius:18px;box-shadow:var(--shadow)}.empty-icon{display:grid;place-items:center;width:62px;height:62px;margin:auto;border-radius:18px;background:var(--soft);color:var(--purple);font-size:28px}.empty h2{font-size:20px;margin:12px 0 5px}.empty p{margin:0 auto;color:var(--muted);max-width:620px}.hidden{display:none}.message{margin:12px 0;color:var(--danger);font-weight:800}.message:empty{display:none}
+    .tabs{display:flex;gap:8px;flex-wrap:wrap;margin:20px 0 12px}.tab{border:1px solid var(--line);background:var(--card);color:var(--muted);border-radius:99px;padding:8px 14px;font-weight:900;cursor:pointer}.tab.selected{background:var(--purple);border-color:var(--purple);color:#fff}
+    .card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:19px;margin:15px 0;box-shadow:var(--shadow)}.top,.grid{display:grid;grid-template-columns:1.35fr .8fr;gap:15px}.grid{grid-template-columns:repeat(2,1fr)}.decision{background:linear-gradient(145deg,var(--soft),var(--card))}h2{font-size:22px;margin:6px 0}.confidence{font-size:31px;color:var(--aqua);font-weight:900}.pill{float:right;font-size:10px;color:#166c76;background:#dff8f6;padding:4px 7px;border-radius:99px;font-weight:900}.dark .pill{background:#123c45;color:#8ff4e9}
+    /* ── Verdict banner ── */
+    .verdict-banner{display:flex;align-items:center;gap:12px;border-radius:10px;padding:12px 16px;margin:10px 0 14px;font-weight:900;font-size:18px;letter-spacing:-.3px}
+    .verdict-banner.hire{background:var(--hire-bg);color:var(--hire)}.verdict-banner.interview{background:var(--interview-bg);color:var(--interview)}.verdict-banner.reject{background:var(--reject-bg);color:var(--reject)}.verdict-icon{font-size:22px}
+    /* ── Agent cards ── */
+    .agent{border-left:4px solid var(--blue)}.agent:nth-child(2){border-color:var(--aqua)}.agent:nth-child(3){border-color:var(--purple)}.agent:nth-child(4){border-color:var(--rose)}
+    .agent-top{display:flex;align-items:flex-start;gap:12px}.agent-meta{flex:1;min-width:0}.agent h3{margin:0}
+    /* SVG score ring */
+    .score-ring{flex-shrink:0;width:52px;height:52px}.ring-track{fill:none;stroke:var(--line);stroke-width:5}.ring-fill{fill:none;stroke-width:5;stroke-linecap:round;transform:rotate(-90deg);transform-origin:26px 26px;transition:stroke-dasharray .5s}.ring-label{font-size:11px;font-weight:900;fill:var(--ink);text-anchor:middle;dominant-baseline:middle}
+    .quote{margin-top:10px;padding:8px;border-radius:7px;background:var(--bg);color:var(--muted);font-size:12px}
+    /* Reasoning clamp */
+    .reasoning-text{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}.reasoning-text.expanded{display:block;overflow:visible}.read-more{background:none;border:none;color:var(--purple);font-weight:800;font-size:12px;cursor:pointer;padding:2px 0;margin-top:2px}
+    .discussion{display:grid;grid-template-columns:repeat(2,1fr);gap:13px}
+    .talk{margin:0;padding:0;overflow:hidden}.talk summary{cursor:pointer;list-style:none;padding:16px;font-weight:900;display:flex;justify-content:space-between}.talk summary::-webkit-details-marker{display:none}.talk summary:after{content:'+';font-size:20px;color:var(--purple)}.talk[open] summary:after{content:'−'}.talk-body{padding:0 16px 16px;border-top:1px solid var(--line);color:var(--muted)}
+    .turn{padding:12px 0;border-bottom:1px solid var(--line)}.turn:last-child{border-bottom:0}.turn b{color:var(--purple)}.turn small{display:block;color:var(--muted);margin-top:4px}.ledger{padding:12px;border-bottom:1px solid var(--line)}.eid{font-size:11px;font-weight:900;color:var(--purple);background:var(--soft);padding:4px 6px;border-radius:5px;margin-right:7px}.verified{font-size:11px;color:var(--aqua);font-weight:800;margin:4px 0 0 43px}
+    .talk-body pre{white-space:pre-wrap;word-break:break-word;font-size:11px;background:var(--bg);color:var(--muted);padding:10px;border-radius:7px;overflow-x:auto;margin:0}
+    .meter{height:8px;border-radius:99px;background:var(--line);overflow:hidden;margin:8px 0}.meter span{display:block;height:100%;background:linear-gradient(90deg,var(--purple),var(--aqua))}.weight-row{display:grid;grid-template-columns:140px 1fr 60px;align-items:center;gap:10px;margin:8px 0;color:var(--muted)}.weight-row strong{color:var(--ink);font-size:12px}
+    .audio{display:flex;align-items:center;gap:15px;flex-wrap:wrap}.audio audio{width:min(100%,600px)}.notice{padding:10px 12px;border-radius:9px;background:var(--soft);color:var(--muted);font-size:12px}
+    /* ── Chip lists ── */
+    .chip-list{display:flex;flex-wrap:wrap;gap:6px;padding:0;margin:8px 0;list-style:none}.chip{display:inline-flex;align-items:center;gap:5px;padding:5px 10px;border-radius:99px;font-size:12px;font-weight:700;line-height:1.3}.chip-strength{background:var(--hire-bg);color:var(--hire)}.chip-concern{background:var(--reject-bg);color:var(--reject)}
+    .add-candidate{grid-column:1/-1;border:1px dashed #ffffff70;border-radius:10px;background:transparent;color:#fff;padding:10px;font-weight:900;cursor:pointer}fieldset{border:0;margin:0;padding:0;min-width:0}.candidate-b-fields{grid-column:1/-1;display:grid;grid-template-columns:repeat(2,1fr);gap:10px}.candidate-b-fields.hidden{display:none}
+    @media(max-width:760px){.upload,.top,.grid,.discussion,.candidate-b-fields{grid-template-columns:1fr}.action{padding:12px}.pipeline{gap:4px}.step{font-size:9px}.pipeline:before{left:8%;right:8%}.hero{padding:25px}.header-line,.tag.head{display:none}.weight-row{grid-template-columns:115px 1fr 45px}.agent-top{flex-direction:column}}
+  </style>
+</head>
+<body>
+<a class="skip-link" href="#report">Skip to results</a>
+<div class="wrap">
+  <header><div class="brand"><span class="mark" aria-hidden="true">⚖</span>Verdict</div><div class="header-line"></div><div class="tag head">Evidence-led hiring decisions</div><button class="theme" id="theme" type="button" aria-pressed="false">Toggle theme</button></header>
+  <section class="hero">
+    <div class="tag" style="color:#9ef5ed">Evidence dossier · multi-agent review</div>
+    <h1>Hire with evidence, not instinct.</h1>
+    <p>Four specialists review candidates independently, debate the hardest disagreement, and issue a transparent, confidence-weighted verdict for your role.</p>
+    <form class="upload" id="form">
+      <div class="field"><label for="position">Target position</label><input id="position" name="target_position" required placeholder="e.g. AI Engineer"></div>
+      <div class="field"><label for="requirementsField">Role requirements fallback</label><textarea id="requirementsField" name="requirements" placeholder="Optional text if no file is attached"></textarea></div>
+      <div class="drop"><label for="requiredSkills"><span class="cloud" aria-hidden="true">☁</span>Required skills file</label><b id="skillsName">Attach skills · TXT, PDF, DOCX</b><small id="skillsHelp">Optional; replaces typing skills alone</small><input class="visually-hidden" id="requiredSkills" name="required_skills" type="file" accept=".txt,.pdf,.docx" aria-describedby="skillsHelp skillsName"></div>
+      <div class="drop"><label for="candidateResume"><span class="cloud" aria-hidden="true">☁</span>Candidate resume</label><b id="resumeName">Optional · TXT, PDF, DOCX</b><small id="resumeHelp">Upload the candidate resume</small><input class="visually-hidden" id="candidateResume" name="candidate_resume" type="file" accept=".txt,.pdf,.docx" aria-describedby="resumeHelp resumeName"></div>
+      <div class="drop"><label for="candidateTranscript"><span class="cloud" aria-hidden="true">☁</span>Interview transcript</label><b id="transcriptName">Optional · TXT, PDF, DOCX</b><small id="transcriptHelp">Upload the interview transcript</small><input class="visually-hidden" id="candidateTranscript" name="candidate_transcript" type="file" accept=".txt,.pdf,.docx" aria-describedby="transcriptHelp transcriptName"></div>
+      <button type="button" class="add-candidate" id="addCandidate" aria-expanded="false" aria-controls="candidateBFields">＋ Add Candidate B</button>
+      <fieldset class="candidate-b-fields hidden" id="candidateBFields"><legend class="visually-hidden">Candidate B documents</legend>
+        <div class="drop"><label for="candidateBResume"><span class="cloud" aria-hidden="true">☁</span>Candidate B resume</label><b id="candidateBResumeName">Optional · TXT, PDF, DOCX</b><small id="candidateBResumeHelp">Upload only if comparing</small><input class="visually-hidden" id="candidateBResume" name="candidate_b_resume" type="file" accept=".txt,.pdf,.docx" aria-describedby="candidateBResumeHelp candidateBResumeName"></div>
+        <div class="drop"><label for="candidateBTranscript"><span class="cloud" aria-hidden="true">☁</span>Candidate B transcript</label><b id="candidateBTranscriptName">Optional · TXT, PDF, DOCX</b><small id="candidateBTranscriptHelp">Upload only if comparing</small><input class="visually-hidden" id="candidateBTranscript" name="candidate_b_transcript" type="file" accept=".txt,.pdf,.docx" aria-describedby="candidateBTranscriptHelp candidateBTranscriptName"></div>
+      </fieldset>
+      <button class="action" id="submit">Run independent panel + debate →</button>
+    </form>
+  </section>
+  <section class="pipeline" aria-label="Assessment pipeline"><div class="step" data-step="0"><div class="icon" aria-hidden="true">⌕</div>Evidence builder</div><div class="step" data-step="1"><div class="icon" aria-hidden="true">◉</div>Isolated panel</div><div class="step" data-step="2"><div class="icon" aria-hidden="true">☷</div>Live debate</div><div class="step" data-step="3"><div class="icon" aria-hidden="true">⚖</div>Adjudication</div><div class="step" data-step="4"><div class="icon" aria-hidden="true">▣</div>Final report</div></section>
+  <div id="message" class="message" role="status" aria-live="polite"></div>
+  <section id="empty" class="empty"><div class="empty-icon" aria-hidden="true">⌁</div><h2>Your evidence room is ready.</h2><p>Enter the target position and upload a candidate resume, interview transcript, or both. A required-skills file is optional; no job-posting file is needed. Add Candidate B only when you want a comparison.</p></section>
+  <div id="tabs" class="tabs hidden" role="tablist" aria-label="Candidates"></div>
+  <main id="report" class="hidden" tabindex="-1"></main>
+</div>
+<script>
+  const $=s=>document.querySelector(s), theme=$('#theme');
+  const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  theme.onclick=()=>{const isDark=document.body.classList.toggle('dark');localStorage.verdictTheme=isDark?'dark':'light';theme.setAttribute('aria-pressed',String(isDark))};
+  if(localStorage.verdictTheme==='dark'){document.body.classList.add('dark');theme.setAttribute('aria-pressed','true')}
+  function names(id,empty){const f=$(id).files;return [...f].map(x=>x.name).join(', ')||empty}
+  $('#requiredSkills').onchange=()=>$('#skillsName').textContent=names('#requiredSkills','Attach skills · TXT, PDF, DOCX');
+  $('#candidateResume').onchange=()=>$('#resumeName').textContent=names('#candidateResume','Optional · TXT, PDF, DOCX');
+  $('#candidateTranscript').onchange=()=>$('#transcriptName').textContent=names('#candidateTranscript','Optional · TXT, PDF, DOCX');
+  $('#candidateBResume').onchange=()=>$('#candidateBResumeName').textContent=names('#candidateBResume','Optional · TXT, PDF, DOCX');
+  $('#candidateBTranscript').onchange=()=>$('#candidateBTranscriptName').textContent=names('#candidateBTranscript','Optional · TXT, PDF, DOCX');
+  let candidateBEnabled=false;
+  $('#addCandidate').onclick=()=>{
+    candidateBEnabled=!candidateBEnabled;
+    $('#candidateBFields').classList.toggle('hidden',!candidateBEnabled);
+    $('#addCandidate').setAttribute('aria-expanded',String(candidateBEnabled));
+    $('#addCandidate').textContent=candidateBEnabled?'− Remove Candidate B':'＋ Add Candidate B';
+    if(!candidateBEnabled){
+      $('#candidateBResume').value='';$('#candidateBTranscript').value='';
+      $('#candidateBResumeName').textContent='Optional · TXT, PDF, DOCX';
+      $('#candidateBTranscriptName').textContent='Optional · TXT, PDF, DOCX';
+    }
+  };
+  function setStep(n){document.querySelectorAll('.step').forEach((s,i)=>s.className='step '+(i<n?'done':i===n?'active':''))}
+  function show(t){$('#message').textContent=t}
+
+  /* ── SVG score ring ── */
+  function scoreRing(score,color){
+    const R=20,C=2*Math.PI*R,filled=Math.max(0,Math.min(1,score/10))*C;
+    return '<svg class="score-ring" viewBox="0 0 52 52" aria-label="Score '+score+'/10">'
+      +'<circle class="ring-track" cx="26" cy="26" r="'+R+'"/>'
+      +'<circle class="ring-fill" cx="26" cy="26" r="'+R+'" stroke="'+color+'" stroke-dasharray="'+filled+' '+C+'" stroke-dashoffset="0"/>'
+      +'<text class="ring-label" x="26" y="26">'+score+'</text>'
+      +'</svg>';
+  }
+  const AGENT_COLORS=['#3376ed','#25b9be','#6d4ee6','#d85f95'];
+
+  /* ── Verdict banner ── */
+  function verdictBanner(rec){
+    const r=rec.toUpperCase();
+    const cls=r.startsWith('HIRE')?'hire':r.startsWith('REJECT')?'reject':'interview';
+    const icon=cls==='hire'?'✅':cls==='reject'?'❌':'🟡';
+    return '<div class="verdict-banner '+cls+'"><span class="verdict-icon">'+icon+'</span>'+esc(rec)+'</div>';
+  }
+
+  /* ── Icon chips ── */
+  function chips(items,type){
+    const icon=type==='strength'?'✦':'▲';
+    return '<ul class="chip-list">'+(items||[]).map(x=>'<li class="chip chip-'+type+'">'+icon+' '+esc(x)+'</li>').join('')+'</ul>';
+  }
+
+  /* ── Reasoning clamp ── */
+  function reasoningHtml(text,id){
+    return '<p class="reasoning-text" id="r-'+id+'">'+esc(text)+'</p>'
+      +'<button class="read-more" onclick="toggleReasoning(\''+id+'\')">Read more</button>';
+  }
+  function toggleReasoning(id){
+    const p=document.getElementById('r-'+id);
+    const btn=p.nextElementSibling;
+    const expanded=p.classList.toggle('expanded');
+    btn.textContent=expanded?'Read less':'Read more';
+  }
+
+  function renderWeights(a){
+    return Object.entries(a.weights||{}).map(([role,value])=>'<div class="weight-row"><strong>'+esc(role)+'</strong><div class="meter"><span style="width:'+value+'%"></span></div><span>'+value+'%</span></div>').join('')
+  }
+  function list(items){return (items||[]).map(x=>'<li>'+esc(x)+'</li>').join('')}
+
+  function renderReport(d){
+    const turns=d.debate.turns||[];
+    const turnHtml=turns.map(t=>'<div class="turn"><b>Turn '+t.turn+' · '+esc(t.speaker)+'</b>'+(t.responds_to?' <small>Direct response to '+esc(t.responds_to)+'</small>':'')+'<p>'+esc(t.message||t.reasoning||'')+'</p><div class="quote">\u201c'+esc(t.quote)+'\u201d · '+esc(t.evidence_id||'No evidence')+(t.revised?' · <b>position revised</b>':'')+'</div></div>').join('');
+    const agentHtml=d.agents.map((a,i)=>'<article class="card agent">'
+      +'<div class="agent-top">'+scoreRing(a.score,AGENT_COLORS[i])
+      +'<div class="agent-meta"><span class="pill">'+esc(a.fit)+' fit</span>'
+      +'<h3>'+esc(a.role)+'</h3>'
+      +reasoningHtml(a.reasoning,'a'+i)
+      +'</div></div>'
+      +'<div class="quote">\u201c'+esc(a.quote)+'\u201d · '+esc(a.evidence_id||'No evidence')+'</div>'
+      +'<small>Post-debate: <b>'+esc(a.score)+'/10</b> · Pre-debate: '+esc(a.pre_debate_score)+' · '+esc(a.confidence)+' confidence · '+esc(a.mode)+'</small>'
+      +'<p class="notice">'+esc(a.revision)+'</p>'
+      +'</article>').join('');
+    const evidenceHtml=d.evidence.map(e=>'<div class="ledger"><span class="eid">'+esc(e.id)+'</span>'+esc(e.quote)+'<div class="verified">\u2713 Exact quote verified · '+esc(e.source_kind)+' · '+esc(e.source)+'</div></div>').join('');
+    const a=d.adjudication;
+    const stateLog=d.state_log||[];
+    const stateRows=stateLog.map(s=>'<div class="turn"><b>'+esc(s.agent)+'</b> · pre-debate '+esc(s.pre_debate_score)+' \u2192 post-debate '+esc(s.post_debate_score)+(s.changed?' · <b>changed</b>':' · unchanged')+'<small>'+esc(s.reason||'')+'</small></div>').join('');
+    $('#report').innerHTML=''
+      +'<section class="top"><article class="card decision"><div class="tag">Final recommendation · '+esc(d.candidate)+'</div>'
+      +verdictBanner(d.recommendation)
+      +'<p>'+esc(a.narrative)+'</p>'
+      +'<div class="notice">Computed tier: '+esc(a.base_tier)+' · thresholds: Hire '+esc(a.thresholds.HIRE)+', Interview '+esc(a.thresholds.INTERVIEW)+', Reject '+esc(a.thresholds.REJECT)+'</div></article>'
+      +'<article class="card"><div class="tag">Computed confidence</div><div class="confidence">'+esc(d.confidence)+'%</div><p style="color:var(--muted)">Agreement, evidence coverage, debate resolution, and veto penalty. Not an LLM-supplied percentage.</p><p><b>Weighted score '+esc(a.weighted_score)+'/10</b></p></article></section>'
+      +'<section class="card"><div class="tag">Independent opinions \u2192 post-debate positions</div><p style="color:var(--muted)">'+esc(d.live_agents)+' of 4 independent personas used configured API keys. Each pre-debate call was isolated; adjudication uses the post-debate scores below.</p><div class="grid">'+agentHtml+'</div></section>'
+      +'<section class="card"><div class="tag">AI discussion · direct turns</div><h3>'+esc(d.debate.topic)+'</h3><p class="notice">'+(d.debate.has_direct_response?'\u2713 Direct response detected':'\u26a0 Direct response invariant not detected')+' · Changed positions: '+esc(d.debate.changed_positions.join(', ')||'none')+'</p><div class="discussion"><details class="card talk" open><summary>Debate transcript</summary><div class="talk-body">'+turnHtml+'</div></details><details class="card talk"><summary>Why the verdict changed</summary><div class="talk-body"><p>'+esc(a.override)+'</p><p>Confidence was computed from post-debate agreement and whether the key conflict was resolved. Low-confidence dimensions had weight redistributed to stronger evidence.</p></div></details></div></section>'
+      +'<section class="card"><div class="tag">Visible state changes · before/after each agent\'s position</div><div class="discussion"><details class="card talk" open><summary>State-change summary</summary><div class="talk-body">'+(stateRows||'<p>No post-debate positions recorded.</p>')+'</div></details><details class="card talk"><summary>Raw state-change log (JSON)</summary><div class="talk-body"><pre>'+esc(JSON.stringify(stateLog,null,2))+'</pre></div></details></div></section>'
+      +'<section class="card"><div class="tag">Adjudication mechanics</div><p>'+esc(a.weight_basis)+'</p><h3>Dimension weights</h3>'+renderWeights(a)+'<p class="notice">Effective weights after confidence redistribution: '+Object.entries(a.effective_weights_after_confidence_redistribution||{}).map(([k,v])=>esc(k)+' '+esc(v)+'%').join(' · ')+'</p></section>'
+      +'<section class="audio card"><div><div class="tag">Bonus · voice debate</div><b>Multi-voice roleplay recording</b><p style="color:var(--muted);margin:4px 0">Skeptic, Hiring Manager, and adjudicator voices demonstrate the debate format.</p></div><audio controls preload="none" src="'+esc(d.audio&&d.audio.url||'/demo-debate.mp3')+'">Your browser does not support inline audio playback; use the transcript link instead.</audio><a href="'+esc(d.audio&&d.audio.transcript||'/demo-debate-transcript.txt')+'" download>Transcript</a></section>'
+      +'<section class="grid"><article class="card"><div class="tag">Strengths</div>'+chips(d.strengths,'strength')+'</article><article class="card"><div class="tag">Concerns</div>'+chips(d.concerns,'concern')+'</article></section>'
+      +'<section class="card"><div class="tag">Verified evidence ledger</div>'+(evidenceHtml||'<p>No extractable evidence.</p>')+'</section>';
+    $('#report').classList.remove('hidden');
+  }
+  $('#tabs').addEventListener('keydown',e=>{
+    if(e.key!=='ArrowLeft'&&e.key!=='ArrowRight')return;
+    const tabs=[...document.querySelectorAll('.tab')];
+    const i=tabs.findIndex(t=>t.classList.contains('selected'));
+    if(i<0)return;
+    const next=tabs[e.key==='ArrowRight'?(i+1)%tabs.length:(i-1+tabs.length)%tabs.length];
+    next.focus();showCandidate(next.dataset.name);e.preventDefault();
+  });
+  let reports={};
+  function showCandidate(name){
+    document.querySelectorAll('.tab').forEach(t=>{
+      const selected=t.dataset.name===name;
+      t.classList.toggle('selected',selected);
+      t.setAttribute('aria-selected',String(selected));
+      t.tabIndex=selected?0:-1;
+    });
+    renderReport(reports[name]);
+    $('#report').focus();
+    $('#report').scrollIntoView({behavior:'smooth'});
+  }
+  $('#form').onsubmit=async e=>{
+    e.preventDefault();
+    if(!$('#candidateResume').files.length&&!$('#candidateTranscript').files.length)return show('Choose a candidate resume, interview transcript, or both.');
+    const b=$('#submit');b.disabled=true;b.textContent='Panel is debating\u2026';show('');$('#empty').classList.add('hidden');let n=0;setStep(0);
+    const timer=setInterval(()=>{n=Math.min(4,n+1);setStep(n)},900);
+    try{
+      const r=await fetch('/api/analyze',{method:'POST',body:new FormData($('#form'))}),d=await r.json();
+      if(!r.ok)throw Error(d.error);
+      reports=d.reports;
+      const namesList=Object.keys(reports);
+      if(namesList.length>1){
+        $('#tabs').innerHTML=namesList.map((name,i)=>'<button class="tab '+(i===0?'selected':'')+'" type="button" role="tab" aria-selected="'+(i===0)+'" tabindex="'+(i===0?0:-1)+'" data-name="'+esc(name)+'">'+esc(name)+'</button>').join('');
+        $('#tabs').classList.remove('hidden');
+        document.querySelectorAll('.tab').forEach(t=>t.onclick=()=>showCandidate(t.dataset.name));
+      }else $('#tabs').classList.add('hidden');
+      showCandidate(namesList[0]);setStep(5);
+    }catch(err){show(err.message);$('#empty').classList.remove('hidden');setStep(-1)}
+    finally{clearInterval(timer);b.disabled=false;b.textContent='Run independent panel + debate \u2192'}
+  };
+</script>
+</body>
+</html>
